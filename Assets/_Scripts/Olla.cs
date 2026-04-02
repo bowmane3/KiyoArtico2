@@ -13,7 +13,7 @@ public class Olla : MonoBehaviour
 
     private int ingredientCount = 0;
     private bool isCooking = false;
-    private bool hasFinished = false;
+    private bool hasFinished = false; //usar pa pop up tipo zeldas
 
     [Header("Animation")]
     public Animator potAnimator;

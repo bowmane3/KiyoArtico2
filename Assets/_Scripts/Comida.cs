@@ -3,10 +3,9 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Edible : MonoBehaviour
 {
-    public AudioSource audioSource;
-
     private XRGrabInteractable grab;
     private bool isEaten = false;
+    private AudioSource lastMouthAudioSource;
 
     private void Awake()
     {
@@ -21,6 +20,11 @@ public class Edible : MonoBehaviour
 
         if (other.CompareTag("Mouth"))
         {
+            AudioSource mouthAudio = other.GetComponent<AudioSource>();
+            if (mouthAudio == null)
+                mouthAudio = other.GetComponentInParent<AudioSource>();
+
+            lastMouthAudioSource = mouthAudio;
             Eat();
         }
     }
@@ -32,9 +36,9 @@ public class Edible : MonoBehaviour
 
         ComidaData data = GetComponent<ComidaData>();
 
-        if (data != null && data.eatSound != null && audioSource != null)
+        if (data != null && data.eatSound != null && lastMouthAudioSource != null)
         {
-            audioSource.PlayOneShot(data.eatSound);
+            lastMouthAudioSource.PlayOneShot(data.eatSound);
         }
 
         Destroy(gameObject, 0.2f);

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Olla : MonoBehaviour
@@ -14,10 +15,6 @@ public class Olla : MonoBehaviour
 
     private int ingredientCount = 0;
     private bool isCooking = false;
-    private bool hasFinished = false; //usar pa pop up tipo zeldas
-
-    [Header("Animation")]
-    public Animator potAnimator;
 
     [Header("Cooking Effects")]
     public Transform fireVisual;
@@ -31,16 +28,24 @@ public class Olla : MonoBehaviour
     public float potShakeSpeed = 18f;
     public float potShakeSettleDuration = 0.35f;
 
+    [Header("Dish Pop")]
+    public float dishPopDuration = 0.28f;
+    public float dishPopScale = 1.08f;
+    public float textPopDuration = 0.22f;
+    public float textPopScale = 1.15f;
+
     [Header("UI")]
     public GameObject floatingTextPrefab;
 
     private GameObject currentDish;
-    private Coroutine cookingEffectsRoutine;
-    private Coroutine potSettleRoutine;
-    private Coroutine firePopRoutine;
-    private Coroutine fireRetractRoutine;
     private Vector3 fireBaseScale;
     private Vector3 potBaseLocalPosition;
+    private Tween fireTween;
+    private Tween firePulseTween;
+    private Tween potShakeTween;
+    private Tween potSettleTween;
+    private Tween dishPopTween;
+    private Tween textPopTween;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -81,9 +86,6 @@ public class Olla : MonoBehaviour
         isCooking = true;
         StartCookingEffects();
 
-        if (potAnimator != null)
-            potAnimator.SetTrigger("Cook");
-
         yield return new WaitForSeconds(cookTime);
 
         SpawnDish();
@@ -91,25 +93,24 @@ public class Olla : MonoBehaviour
 
         ingredientCount = 0;
         isCooking = false;
-        hasFinished = true;
     }
 
     private void StartCookingEffects()
     {
-        if (potSettleRoutine != null)
-        {
-            StopCoroutine(potSettleRoutine);
-            potSettleRoutine = null;
-        }
+        potSettleTween?.Kill();
+        potSettleTween = null;
 
         if (fireVisual != null)
         {
             fireVisual.gameObject.SetActive(true);
             fireVisual.localScale = Vector3.zero;
 
-            if (firePopRoutine != null)
-                StopCoroutine(firePopRoutine);
-            firePopRoutine = StartCoroutine(FirePopRoutine());
+            fireTween?.Kill();
+            firePulseTween?.Kill();
+
+            fireTween = fireVisual.DOScale(fireBaseScale, Mathf.Max(0.01f, firePopDuration))
+                .SetEase(Ease.OutBack)
+                .OnComplete(StartFirePulse);
         }
 
         if (potShakeTarget != null)
@@ -118,52 +119,52 @@ public class Olla : MonoBehaviour
         if (smokeParticles != null)
             smokeParticles.Play();
 
-        if (cookingEffectsRoutine != null)
-            StopCoroutine(cookingEffectsRoutine);
-
-        cookingEffectsRoutine = StartCoroutine(CookingEffectsRoutine());
+        StartPotShake();
     }
 
     private void StopCookingEffects(bool instant = false)
     {
-        if (cookingEffectsRoutine != null)
-        {
-            StopCoroutine(cookingEffectsRoutine);
-            cookingEffectsRoutine = null;
-        }
+        firePulseTween?.Kill();
+        firePulseTween = null;
+
+        potShakeTween?.Kill();
+        potShakeTween = null;
 
         if (fireVisual != null)
         {
-            if (firePopRoutine != null)
-                StopCoroutine(firePopRoutine);
-            if (fireRetractRoutine != null)
-                StopCoroutine(fireRetractRoutine);
+            fireTween?.Kill();
+            fireTween = null;
 
             if (instant)
             {
                 fireVisual.localScale = Vector3.zero;
                 fireVisual.gameObject.SetActive(false);
-                fireRetractRoutine = null;
             }
             else
             {
-                fireRetractRoutine = StartCoroutine(FireRetractRoutine());
+                fireTween = fireVisual.DOScale(Vector3.zero, Mathf.Max(0.01f, fireRetractDuration))
+                    .SetEase(Ease.InBack)
+                    .OnComplete(() =>
+                    {
+                        if (fireVisual != null)
+                            fireVisual.gameObject.SetActive(false);
+                    });
             }
         }
 
         if (potShakeTarget != null)
         {
-            if (potSettleRoutine != null)
-                StopCoroutine(potSettleRoutine);
+            potSettleTween?.Kill();
+            potSettleTween = null;
 
             if (instant)
             {
                 potShakeTarget.localPosition = potBaseLocalPosition;
-                potSettleRoutine = null;
             }
             else
             {
-                potSettleRoutine = StartCoroutine(SettlePotShakeRoutine());
+                potSettleTween = potShakeTarget.DOLocalMove(potBaseLocalPosition, Mathf.Max(0.01f, potShakeSettleDuration))
+                    .SetEase(Ease.OutCubic);
             }
         }
 
@@ -171,92 +172,81 @@ public class Olla : MonoBehaviour
             smokeParticles.Stop(false, ParticleSystemStopBehavior.StopEmitting);
     }
 
-    private IEnumerator CookingEffectsRoutine()
+    private void StartFirePulse()
     {
-        while (firePopRoutine != null)
-            yield return null;
+        if (fireVisual == null || !isCooking)
+            return;
 
-        while (isCooking)
-        {
-            float time = Time.time;
-
-            if (fireVisual != null)
-            {
-                float pulse = 1f + Mathf.Sin(time * firePulseSpeed) * firePulseAmount;
-                fireVisual.localScale = fireBaseScale * pulse;
-            }
-
-            if (potShakeTarget != null)
-            {
-                float shakeX = Mathf.Sin(time * potShakeSpeed) * potShakeAmount;
-                float shakeZ = Mathf.Cos(time * (potShakeSpeed * 0.85f)) * potShakeAmount;
-                potShakeTarget.localPosition = potBaseLocalPosition + new Vector3(shakeX, 0f, shakeZ);
-            }
-
-            yield return null;
-        }
+        firePulseTween?.Kill();
+        float pulseDuration = Mathf.Max(0.01f, 1f / Mathf.Max(0.01f, firePulseSpeed));
+        float targetScale = 1f + firePulseAmount;
+        firePulseTween = fireVisual
+            .DOScale(fireBaseScale * targetScale, pulseDuration)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo);
     }
 
-    private IEnumerator FirePopRoutine()
+    private void StartPotShake()
     {
-        fireVisual.localScale = Vector3.zero;
-        float elapsed = 0f;
-        float duration = Mathf.Max(0.01f, firePopDuration);
+        if (potShakeTarget == null)
+            return;
 
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            float eased = t < 0.5f ? 2f * t * t : 1f - Mathf.Pow(-2f * t + 2f, 2f) / 2f;
-            fireVisual.localScale = Vector3.Lerp(Vector3.zero, fireBaseScale, eased);
-            yield return null;
-        }
-
-        fireVisual.localScale = fireBaseScale;
-        firePopRoutine = null;
+        potShakeTween?.Kill();
+        float loopDuration = Mathf.Max(0.01f, 1f / Mathf.Max(0.01f, potShakeSpeed));
+        potShakeTween = DOTween.To(
+                () => 0f,
+                phase =>
+                {
+                    float shakeX = Mathf.Sin(phase * Mathf.PI * 2f) * potShakeAmount;
+                    float shakeZ = Mathf.Cos(phase * Mathf.PI * 2f * 0.85f) * potShakeAmount;
+                    potShakeTarget.localPosition = potBaseLocalPosition + new Vector3(shakeX, 0f, shakeZ);
+                },
+                1f,
+                loopDuration)
+            .SetEase(Ease.Linear)
+            .SetLoops(-1, LoopType.Restart);
     }
 
-    private IEnumerator FireRetractRoutine()
+    private void PopDishAndLabel(Transform dishTransform, Transform labelTransform)
     {
-        float elapsed = 0f;
-        float duration = Mathf.Max(0.01f, fireRetractDuration);
-
-        while (elapsed < duration)
+        if (dishTransform != null)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            float eased = t < 0.5f ? 2f * t * t : 1f - Mathf.Pow(-2f * t + 2f, 2f) / 2f;
-            fireVisual.localScale = Vector3.Lerp(fireBaseScale, Vector3.zero, eased);
-            yield return null;
+            dishPopTween?.Kill();
+            Vector3 dishBaseScale = dishTransform.localScale;
+            dishTransform.localScale = Vector3.zero;
+            dishPopTween = dishTransform
+                .DOScale(dishBaseScale * dishPopScale, Mathf.Max(0.01f, dishPopDuration))
+                .SetEase(Ease.OutBack)
+                .OnComplete(() =>
+                {
+                    if (dishTransform != null)
+                        dishTransform.DOScale(dishBaseScale, 0.08f).SetEase(Ease.InOutSine);
+                });
         }
 
-        fireVisual.localScale = Vector3.zero;
-        fireVisual.gameObject.SetActive(false);
-        fireRetractRoutine = null;
-    }
-
-    private IEnumerator SettlePotShakeRoutine()
-    {
-        Vector3 startPos = potShakeTarget.localPosition;
-        float duration = Mathf.Max(0.01f, potShakeSettleDuration);
-        float elapsed = 0f;
-
-        while (elapsed < duration)
+        if (labelTransform != null)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            float eased = 1f - Mathf.Pow(1f - t, 3f);
-            potShakeTarget.localPosition = Vector3.Lerp(startPos, potBaseLocalPosition, eased);
-            yield return null;
+            textPopTween?.Kill();
+            Vector3 textBaseScale = labelTransform.localScale;
+            labelTransform.localScale = Vector3.zero;
+            textPopTween = labelTransform
+                .DOScale(textBaseScale * textPopScale, Mathf.Max(0.01f, textPopDuration))
+                .SetEase(Ease.OutBack)
+                .OnComplete(() =>
+                {
+                    if (labelTransform != null)
+                        labelTransform.DOScale(textBaseScale, 0.07f).SetEase(Ease.InOutSine);
+                });
         }
-
-        potShakeTarget.localPosition = potBaseLocalPosition;
-        potSettleRoutine = null;
     }
 
     private void OnDisable()
     {
         StopCookingEffects(true);
+        dishPopTween?.Kill();
+        dishPopTween = null;
+        textPopTween?.Kill();
+        textPopTween = null;
     }
 
     private void SpawnDish()
@@ -269,6 +259,7 @@ public class Olla : MonoBehaviour
         currentDish = Instantiate(dishPrefab, spawnPoint.position, Quaternion.identity);
 
         Transform label = ShowDishName(currentDish);
+        PopDishAndLabel(currentDish.transform, label);
 
         XRGrabInteractable grab = currentDish.GetComponent<XRGrabInteractable>();
         if (grab != null)

@@ -1,36 +1,28 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class Ingrediente : MonoBehaviour
 {
     private bool isUsed = false;
+    private Tween consumeTween;
+
+    [SerializeField] private float consumeDuration = 0.3f;
 
     public void OnDroppedInPot(Transform target)
     {
         if (isUsed) return;
         isUsed = true;
 
-        StartCoroutine(ShrinkAndDestroy(target));
+        consumeTween?.Kill();
+        Sequence sequence = DOTween.Sequence();
+        sequence.Join(transform.DOMove(target.position, consumeDuration).SetEase(Ease.InQuad));
+        sequence.Join(transform.DOScale(Vector3.zero, consumeDuration).SetEase(Ease.InBack));
+        consumeTween = sequence.OnComplete(() => Destroy(gameObject));
     }
 
-    private System.Collections.IEnumerator ShrinkAndDestroy(Transform target)
+    private void OnDisable()
     {
-        float duration = 0.3f;
-        float time = 0f;
-
-        Vector3 startScale = transform.localScale;
-        Vector3 startPos = transform.position;
-
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-            float t = time / duration;
-
-            transform.position = Vector3.Lerp(startPos, target.position, t);
-            transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
-
-            yield return null;
-        }
-
-        Destroy(gameObject);
+        consumeTween?.Kill();
+        consumeTween = null;
     }
 }

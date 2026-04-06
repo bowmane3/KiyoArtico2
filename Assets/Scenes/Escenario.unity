@@ -10377,6 +10377,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Olla
       objectReference: {fileID: 0}
+    - target: {fileID: 6892616453198405334, guid: 29fa15fa5be4b9344909bef68123802e,
+        type: 3}
+      propertyPath: potShakeSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6892616453198405334, guid: 29fa15fa5be4b9344909bef68123802e,
+        type: 3}
+      propertyPath: firePulseSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6892616453198405334, guid: 29fa15fa5be4b9344909bef68123802e,
+        type: 3}
+      propertyPath: potShakeAmount
+      value: 0.005
+      objectReference: {fileID: 0}
     - target: {fileID: 7472113705100458331, guid: 29fa15fa5be4b9344909bef68123802e,
         type: 3}
       propertyPath: m_LocalPosition.x

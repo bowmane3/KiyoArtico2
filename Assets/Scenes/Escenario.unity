@@ -10539,7 +10539,7 @@ PrefabInstance:
         type: 3}
       propertyPath: cookingReadySound
       value: 
-      objectReference: {fileID: 8300000, guid: 741e0d5eb4c418d4498a2ce5cbe3a41d, type: 3}
+      objectReference: {fileID: 8300000, guid: 8d701f45fc25d364a8a1065d19a34ca0, type: 3}
     - target: {fileID: 7472113705100458331, guid: 29fa15fa5be4b9344909bef68123802e,
         type: 3}
       propertyPath: m_LocalPosition.x

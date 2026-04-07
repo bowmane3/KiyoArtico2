@@ -9,6 +9,7 @@ public class DishSpawnLock : MonoBehaviour
     private Transform labelTransform;
 
     private bool isUnlocked;
+    public bool IsLocked => !isUnlocked;
 
     private void Awake()
     {

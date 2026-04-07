@@ -6,6 +6,12 @@ public class PrenderGas : MonoBehaviour
 
     public void TurnOnGas()
     {
-        pot.StartCooking();
+        if (pot == null)
+        {
+            Debug.LogWarning("PrenderGas: No pot assigned.", this);
+            return;
+        }
+
+        pot.TryStartCooking();
     }
 }

@@ -16,6 +16,12 @@ public class Olla : MonoBehaviour
     private int ingredientCount = 0;
     private bool isCooking = false;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip cookingLoopSound;
+    public AudioClip cookingReadySound;
+    public AudioClip invalidGasSound;
+
     [Header("Cooking Effects")]
     public Transform fireVisual;
     public float firePopDuration = 0.3f;
@@ -47,6 +53,18 @@ public class Olla : MonoBehaviour
     private Tween dishPopTween;
     private Tween textPopTween;
 
+    public bool TryStartCooking()
+    {
+        if (ingredientCount == 0 || isCooking || IsDishSpawnLocked())
+        {
+            PlayInvalidGasSound();
+            return false;
+        }
+
+        StartCoroutine(CookRoutine());
+        return true;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (isCooking) return;
@@ -76,23 +94,36 @@ public class Olla : MonoBehaviour
 
     public void StartCooking()
     {
-        if (ingredientCount == 0 || isCooking) return;
-
-        StartCoroutine(CookRoutine());
+        TryStartCooking();
     }
 
     private IEnumerator CookRoutine()
     {
         isCooking = true;
         StartCookingEffects();
+        PlayCookingLoopSound();
 
         yield return new WaitForSeconds(cookTime);
 
         SpawnDish();
+        StopCookingLoopSound();
         StopCookingEffects();
+        PlayCookingReadySound();
 
         ingredientCount = 0;
         isCooking = false;
+    }
+
+    private bool IsDishSpawnLocked()
+    {
+        if (currentDish == null)
+            return false;
+
+        DishSpawnLock lockBehaviour = currentDish.GetComponent<DishSpawnLock>();
+        if (lockBehaviour == null)
+            return false;
+
+        return lockBehaviour.isActiveAndEnabled && lockBehaviour.IsLocked;
     }
 
     private void StartCookingEffects()
@@ -242,11 +273,70 @@ public class Olla : MonoBehaviour
 
     private void OnDisable()
     {
+        StopCookingLoopSound();
         StopCookingEffects(true);
         dishPopTween?.Kill();
         dishPopTween = null;
         textPopTween?.Kill();
         textPopTween = null;
+    }
+
+    private AudioSource GetAudioSource()
+    {
+        if (audioSource != null)
+            return audioSource;
+
+        if (TryGetComponent(out AudioSource cachedAudioSource))
+        {
+            audioSource = cachedAudioSource;
+            return audioSource;
+        }
+
+        return null;
+    }
+
+    private void PlayCookingLoopSound()
+    {
+        AudioSource source = GetAudioSource();
+        if (source == null || cookingLoopSound == null)
+            return;
+
+        source.Stop();
+        source.loop = true;
+        source.clip = cookingLoopSound;
+        source.Play();
+    }
+
+    private void StopCookingLoopSound()
+    {
+        AudioSource source = GetAudioSource();
+        if (source == null)
+            return;
+
+        if (source.clip == cookingLoopSound)
+        {
+            source.Stop();
+            source.loop = false;
+            source.clip = null;
+        }
+    }
+
+    private void PlayCookingReadySound()
+    {
+        AudioSource source = GetAudioSource();
+        if (source == null || cookingReadySound == null)
+            return;
+
+        source.PlayOneShot(cookingReadySound);
+    }
+
+    private void PlayInvalidGasSound()
+    {
+        AudioSource source = GetAudioSource();
+        if (source == null || invalidGasSound == null)
+            return;
+
+        source.PlayOneShot(invalidGasSound);
     }
 
     private void SpawnDish()

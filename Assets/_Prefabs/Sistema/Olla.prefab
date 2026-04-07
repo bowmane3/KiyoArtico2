@@ -168,8 +168,23 @@ MonoBehaviour:
   spawnPoint: {fileID: 7773887825279063642}
   possibleDishes:
   - {fileID: 231777005307703409, guid: 303cf7ef0c6a230498cb0462bffb391d, type: 3}
+  - {fileID: 7393724356077432450, guid: 7873d8a24807f9b428f5512026060001, type: 3}
+  - {fileID: 2028722836342073624, guid: 233a139ffb339cc41a8afc31ab78241d, type: 3}
+  - {fileID: 4278605748773527900, guid: 97636ceffa0a04d4da6f547f4cf189fc, type: 3}
+  - {fileID: 532131958355629736, guid: 6c1ea4a89e1cc6745b86af19fafe71af, type: 3}
+  - {fileID: 274242758124685902, guid: 86436441a105b924e942e17eff6f0c51, type: 3}
+  - {fileID: 819519794791547702, guid: 44f6f8b497e9d0f469875524525a9a4c, type: 3}
+  - {fileID: 479412577234303275, guid: bc6148295a3e4ee4d854b433bf9ade04, type: 3}
+  - {fileID: 6195511298023431496, guid: 3da8fc6806851be43b6f881ed1b80486, type: 3}
+  - {fileID: 3684436798056884264, guid: 02973882de297b64c8a664cc9e878fa6, type: 3}
+  - {fileID: 4303804007584504603, guid: 041aba7fd293082408c761f7694b3045, type: 3}
+  - {fileID: 8822731652862955902, guid: 0c0939c8a188c0b4e9247608792c06fc, type: 3}
+  - {fileID: 2603552526317543795, guid: 5bb71e95ca7e4074d943e39dfe17fb6d, type: 3}
   cookTime: 3
-  potAnimator: {fileID: 0}
+  audioSource: {fileID: 0}
+  cookingLoopSound: {fileID: 0}
+  cookingReadySound: {fileID: 0}
+  invalidGasSound: {fileID: 0}
   fireVisual: {fileID: 2286859485180112667}
   firePopDuration: 0.3
   fireRetractDuration: 0.35
@@ -180,6 +195,10 @@ MonoBehaviour:
   potShakeAmount: 0.015
   potShakeSpeed: 18
   potShakeSettleDuration: 0.35
+  dishPopDuration: 0.28
+  dishPopScale: 1.08
+  textPopDuration: 0.22
+  textPopScale: 1.15
   floatingTextPrefab: {fileID: 2289417803985666115, guid: d48b2fab9b85d1540ba9c0816b586e9c,
     type: 3}
 --- !u!135 &3755445628513288159

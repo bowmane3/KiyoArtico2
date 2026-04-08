@@ -975,6 +975,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "boton",
+                    "type": "Button",
+                    "id": "8d4c5aca-16f4-4688-84b3-27b8ed0abe42",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1283,6 +1292,17 @@
                     "processors": "ScaleVector2(x=0),StickDeadzone",
                     "groups": "",
                     "action": "Translate Manipulation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7a799389-0197-4997-a7c9-a45ad0e64a7d",
+                    "path": "<XRController>{LeftHand}/{PrimaryButton}",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "boton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -2068,6 +2088,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "boton",
+                    "type": "Button",
+                    "id": "84848a9e-d3f0-4efb-9d70-1f91dc5ca519",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -2376,6 +2405,17 @@
                     "processors": "ScaleVector2(x=0),StickDeadzone",
                     "groups": "",
                     "action": "Translate Manipulation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db6d7cda-940b-44b8-a1c9-374195b18009",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "boton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -3395,6 +3435,34 @@
                     "action": "Spawn Object",
                     "isComposite": false,
                     "isPartOfComposite": true
+                }
+            ]
+        },
+        {
+            "name": "New action map",
+            "id": "1ef4d2f6-2dfb-40c6-a195-b20795963227",
+            "actions": [
+                {
+                    "name": "Empezar",
+                    "type": "Button",
+                    "id": "00a2793a-4c7e-4e45-9053-8d19d4c9ff33",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d73864a3-39f2-4521-9a2d-1043bdf78715",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Empezar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

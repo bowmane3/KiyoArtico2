@@ -26,6 +26,8 @@ public class Edible : MonoBehaviour
 
             lastMouthAudioSource = mouthAudio;
             Eat();
+
+            other.GetComponent<EatingSystem>().Eat();
         }
     }
 

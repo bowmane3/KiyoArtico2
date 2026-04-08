@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class empezarEscena : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class empezarEscena : MonoBehaviour
     {
         FadeIn.transform.rotation = Quaternion.Euler(0, 0, 0);
         Iniciar.transform.rotation = Quaternion.Euler(0, 0, 0);
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             FadeIn.SetActive(true);

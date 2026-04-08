@@ -14,6 +14,7 @@ public class Olla : MonoBehaviour
     public float cookTime = 3f;
 
     private int ingredientCount = 0;
+    
     private bool isCooking = false;
 
     [Header("Audio")]

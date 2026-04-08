@@ -4307,6 +4307,8 @@ MonoBehaviour:
   player: {fileID: 511322686}
   inicial: {fileID: 1863997355}
   previa: {fileID: 707911985}
+  inputActionReference: {fileID: -5881954495412375035, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
 --- !u!4 &424313411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1561331565370082721, guid: d1a1851924a2cc54ba725f900dd6bb36,

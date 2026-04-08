@@ -2088,15 +2088,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "boton",
-                    "type": "Button",
-                    "id": "84848a9e-d3f0-4efb-9d70-1f91dc5ca519",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -2405,17 +2396,6 @@
                     "processors": "ScaleVector2(x=0),StickDeadzone",
                     "groups": "",
                     "action": "Translate Manipulation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "db6d7cda-940b-44b8-a1c9-374195b18009",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "boton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

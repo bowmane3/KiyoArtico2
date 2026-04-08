@@ -4784,6 +4784,8 @@ MonoBehaviour:
   player: {fileID: 511322686}
   inicial: {fileID: 1863997355}
   previa: {fileID: 707911985}
+  inputActionReference: {fileID: -7378226143111747021, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
 --- !u!4 &424313411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1561331565370082721, guid: d1a1851924a2cc54ba725f900dd6bb36,
@@ -11632,7 +11634,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Presiona Espacio para comenzar
+  m_text: Presiona el Boton Primario Izq. para comenzar
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11659,7 +11661,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.05
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -22299,7 +22301,7 @@ PrefabInstance:
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e,
         type: 3}

@@ -2110,15 +2110,6 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""boton"",
-                    ""type"": ""Button"",
-                    ""id"": ""84848a9e-d3f0-4efb-9d70-1f91dc5ca519"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -2427,17 +2418,6 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""processors"": ""ScaleVector2(x=0),StickDeadzone"",
                     ""groups"": """",
                     ""action"": ""Translate Manipulation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""db6d7cda-940b-44b8-a1c9-374195b18009"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""boton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -3570,7 +3550,6 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         m_XRIRightInteraction_Manipulation = m_XRIRightInteraction.FindAction("Manipulation", throwIfNotFound: true);
         m_XRIRightInteraction_ScaleToggle = m_XRIRightInteraction.FindAction("Scale Toggle", throwIfNotFound: true);
         m_XRIRightInteraction_ScaleOverTime = m_XRIRightInteraction.FindAction("Scale Over Time", throwIfNotFound: true);
-        m_XRIRightInteraction_boton = m_XRIRightInteraction.FindAction("boton", throwIfNotFound: true);
         // XRI Right Locomotion
         m_XRIRightLocomotion = asset.FindActionMap("XRI Right Locomotion", throwIfNotFound: true);
         m_XRIRightLocomotion_TeleportMode = m_XRIRightLocomotion.FindAction("Teleport Mode", throwIfNotFound: true);
@@ -4323,7 +4302,6 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
     private readonly InputAction m_XRIRightInteraction_Manipulation;
     private readonly InputAction m_XRIRightInteraction_ScaleToggle;
     private readonly InputAction m_XRIRightInteraction_ScaleOverTime;
-    private readonly InputAction m_XRIRightInteraction_boton;
     public struct XRIRightInteractionActions
     {
         private @XRIDefaultInputActions m_Wrapper;
@@ -4340,7 +4318,6 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         public InputAction @Manipulation => m_Wrapper.m_XRIRightInteraction_Manipulation;
         public InputAction @ScaleToggle => m_Wrapper.m_XRIRightInteraction_ScaleToggle;
         public InputAction @ScaleOverTime => m_Wrapper.m_XRIRightInteraction_ScaleOverTime;
-        public InputAction @boton => m_Wrapper.m_XRIRightInteraction_boton;
         public InputActionMap Get() { return m_Wrapper.m_XRIRightInteraction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -4386,9 +4363,6 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @ScaleOverTime.started += instance.OnScaleOverTime;
             @ScaleOverTime.performed += instance.OnScaleOverTime;
             @ScaleOverTime.canceled += instance.OnScaleOverTime;
-            @boton.started += instance.OnBoton;
-            @boton.performed += instance.OnBoton;
-            @boton.canceled += instance.OnBoton;
         }
 
         private void UnregisterCallbacks(IXRIRightInteractionActions instance)
@@ -4429,9 +4403,6 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @ScaleOverTime.started -= instance.OnScaleOverTime;
             @ScaleOverTime.performed -= instance.OnScaleOverTime;
             @ScaleOverTime.canceled -= instance.OnScaleOverTime;
-            @boton.started -= instance.OnBoton;
-            @boton.performed -= instance.OnBoton;
-            @boton.canceled -= instance.OnBoton;
         }
 
         public void RemoveCallbacks(IXRIRightInteractionActions instance)
@@ -4901,7 +4872,6 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         void OnManipulation(InputAction.CallbackContext context);
         void OnScaleToggle(InputAction.CallbackContext context);
         void OnScaleOverTime(InputAction.CallbackContext context);
-        void OnBoton(InputAction.CallbackContext context);
     }
     public interface IXRIRightLocomotionActions
     {

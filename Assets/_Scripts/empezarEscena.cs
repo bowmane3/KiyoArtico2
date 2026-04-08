@@ -6,10 +6,11 @@ using UnityEngine.InputSystem;
 public class empezarEscena : MonoBehaviour
 {
     public GameObject[] objetos;
-    public GameObject Iniciar, FadeIn;
+    public GameObject Iniciar, FadeIn, finalizar;
     public GameObject player, inicial, previa;
     public InputActionReference inputActionReference;
     InputAction action;
+    public Animator fadeIn, fadeOut;
 
     // Start is called before the first frame update
     void Start()
@@ -29,10 +30,17 @@ public class empezarEscena : MonoBehaviour
 
         FadeIn.transform.rotation = Quaternion.Euler(0, 0, 0);
         Iniciar.transform.rotation = Quaternion.Euler(0, 0, 0);
+        finalizar.transform.rotation = Quaternion.Euler(0, 0, 0);
+
         if (pressed)
         {
+            fadeIn.SetBool("fin", true);
             FadeIn.SetActive(true);
             Invoke("Empezar", 3f);
+        }
+        if (release)
+        {
+            fadeIn.SetBool("fin", true);
         }
         //if (Input.GetKeyDown(KeyCode.Space))
         //{
@@ -43,8 +51,9 @@ public class empezarEscena : MonoBehaviour
 
     public void Empezar()
     {
+        fadeOut.SetBool("fin", true);
         Iniciar.SetActive(true);
-        FadeIn.SetActive(false);
+        //FadeIn.SetActive(false);
         player.transform.position = inicial.transform.position;
         foreach (GameObject obj in objetos)
         {
